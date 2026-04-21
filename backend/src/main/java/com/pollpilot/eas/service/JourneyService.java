@@ -35,8 +35,7 @@ public class JourneyService {
                 "stepId", saved.getId(),
                 "status", saved.getStatus(),
                 "stepOrder", saved.getStepOrder(),
-                "updatedAt", saved.getUpdatedAt().toString()
-        ));
+                "updatedAt", saved.getUpdatedAt().toString()));
         return saved;
     }
 }

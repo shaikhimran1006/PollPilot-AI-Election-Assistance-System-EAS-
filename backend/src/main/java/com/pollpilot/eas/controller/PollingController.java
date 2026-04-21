@@ -24,7 +24,9 @@ public class PollingController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<PollingLocation>> search(@Valid @RequestBody PollingSearchRequest request) throws Exception {
-        return ResponseEntity.ok(pollingLocationService.searchLocations(currentUserService.getUserId(), request.getAddress()));
+    public ResponseEntity<List<PollingLocation>> search(@Valid @RequestBody PollingSearchRequest request)
+            throws Exception {
+        return ResponseEntity
+                .ok(pollingLocationService.searchLocations(currentUserService.getUserId(), request.getAddress()));
     }
 }

@@ -17,7 +17,7 @@ public class PollingLocationService {
     private final GeoApiContext geoApiContext;
 
     public PollingLocationService(PollingLocationRepository pollingLocationRepository,
-                                  @Value("${google.maps.apiKey}") String mapsApiKey) {
+            @Value("${google.maps.apiKey}") String mapsApiKey) {
         this.pollingLocationRepository = pollingLocationRepository;
         this.geoApiContext = new GeoApiContext.Builder().apiKey(mapsApiKey).build();
     }
@@ -25,7 +25,7 @@ public class PollingLocationService {
     @Cacheable(value = "pollingLocations", key = "#address")
     public List<PollingLocation> searchLocations(String userId, String address) throws Exception {
         var results = PlacesApi.textSearchQuery(geoApiContext, "polling station near " + address)
-            .type(PlaceType.POLLING_PLACE)
+                .type(PlaceType.POLLING_PLACE)
                 .await();
         List<PollingLocation> locations = results.results
                 .stream()

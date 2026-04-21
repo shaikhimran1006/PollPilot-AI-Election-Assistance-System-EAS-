@@ -20,8 +20,8 @@ public class ChatbotService {
     private final InputSanitizer inputSanitizer;
 
     public ChatbotService(ChatSessionRepository chatSessionRepository,
-                          @Value("${google.dialogflow.projectId}") String projectId,
-                          InputSanitizer inputSanitizer) {
+            @Value("${google.dialogflow.projectId}") String projectId,
+            InputSanitizer inputSanitizer) {
         this.chatSessionRepository = chatSessionRepository;
         this.projectId = projectId;
         this.inputSanitizer = inputSanitizer;
