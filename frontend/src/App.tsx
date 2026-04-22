@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
+import AuthGuard from "./components/AuthGuard";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import JourneyPage from "./pages/JourneyPage";
@@ -13,7 +14,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={<Layout />}
+      <Route path="/" element={<AuthGuard><Layout /></AuthGuard>}
         children={[
           <Route index element={<DashboardPage />} key="dashboard" />,
           <Route path="journey" element={<JourneyPage />} key="journey" />,

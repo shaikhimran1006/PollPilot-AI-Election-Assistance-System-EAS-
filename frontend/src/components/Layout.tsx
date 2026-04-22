@@ -12,6 +12,11 @@ const navItems = [
 export default function Layout() {
   const location = useLocation();
 
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    window.location.href = "/login";
+  };
+
   return (
     <div>
       <a href="#main" className="badge" style={{ position: "absolute", left: 16, top: 12 }}>
@@ -23,7 +28,7 @@ export default function Layout() {
             <div className="badge">ELECTION NAVIGATOR</div>
             <h1 style={{ margin: "12px 0 0", fontFamily: "Fraunces, serif" }}>PollPilot</h1>
           </div>
-          <nav aria-label="Primary" style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+          <nav aria-label="Primary" style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -38,6 +43,7 @@ export default function Layout() {
                 {item.label}
               </Link>
             ))}
+            <button className="secondary-btn" onClick={logout}>Logout</button>
           </nav>
         </div>
       </header>

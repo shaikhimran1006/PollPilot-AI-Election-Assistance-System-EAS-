@@ -2,7 +2,6 @@ package com.pollpilot.eas.service;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
-import com.google.maps.model.PlaceType;
 import com.pollpilot.eas.model.PollingLocation;
 import com.pollpilot.eas.repository.PollingLocationRepository;
 import java.util.List;
@@ -25,7 +24,6 @@ public class PollingLocationService {
     @Cacheable(value = "pollingLocations", key = "#address")
     public List<PollingLocation> searchLocations(String userId, String address) throws Exception {
         var results = PlacesApi.textSearchQuery(geoApiContext, "polling station near " + address)
-                .type(PlaceType.POLLING_PLACE)
                 .await();
         List<PollingLocation> locations = results.results
                 .stream()

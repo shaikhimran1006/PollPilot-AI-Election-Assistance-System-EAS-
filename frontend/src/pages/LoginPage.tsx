@@ -7,27 +7,52 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSuccess = (accessToken: string) => {
+    localStorage.setItem("accessToken", accessToken);
+    window.location.href = "/";
+  };
 
   const login = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await api.post("/auth/login", { email, password });
-      localStorage.setItem("accessToken", response.data.accessToken);
-      window.location.href = "/";
-    } catch {
-      setError("Login failed");
+      handleSuccess(response.data.accessToken);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signup = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await api.post("/auth/signup", { email, password });
+      handleSuccess(response.data.accessToken);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Sign up failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   const firebaseLogin = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       const response = await api.post("/auth/firebase", { idToken });
-      localStorage.setItem("accessToken", response.data.accessToken);
-      window.location.href = "/";
-    } catch {
-      setError("Firebase login failed");
+      handleSuccess(response.data.accessToken);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Firebase login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,10 +77,13 @@ export default function LoginPage() {
           style={{ width: "100%", padding: 12, margin: "8px 0 16px", borderRadius: 10 }}
         />
         {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
-        <button className="primary-btn" onClick={login} style={{ width: "100%", marginBottom: 12 }}>
-          Sign In
+        <button className="primary-btn" onClick={login} disabled={loading} style={{ width: "100%", marginBottom: 12 }}>
+          {loading ? "Please wait..." : "Sign In"}
         </button>
-        <button className="secondary-btn" onClick={firebaseLogin} style={{ width: "100%" }}>
+        <button className="secondary-btn" onClick={signup} disabled={loading} style={{ width: "100%", marginBottom: 12 }}>
+          Create Account
+        </button>
+        <button className="secondary-btn" onClick={firebaseLogin} disabled={loading} style={{ width: "100%" }}>
           Sign In with Google
         </button>
       </div>

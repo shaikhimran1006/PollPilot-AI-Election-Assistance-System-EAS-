@@ -5,18 +5,22 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const sendMessage = async () => {
     if (!input.trim()) {
       return;
     }
     setLoading(true);
+    setError(null);
     const userMessage = input;
     setMessages((prev) => [...prev, `You: ${userMessage}`]);
     setInput("");
     try {
       const response = await api.post<string>("/chat", { message: userMessage });
       setMessages((prev) => [...prev, `Assistant: ${response.data}`]);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Chat service unavailable right now");
     } finally {
       setLoading(false);
     }
@@ -30,6 +34,7 @@ export default function ChatWidget() {
           <p key={index} style={{ margin: "6px 0" }}>{message}</p>
         ))}
       </div>
+      {error && <p style={{ color: "var(--danger)", marginTop: 0 }}>{error}</p>}
       <div style={{ display: "flex", gap: 12 }}>
         <label className="sr-only" htmlFor="chatInput">Message</label>
         <input
