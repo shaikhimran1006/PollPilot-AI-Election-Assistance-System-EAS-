@@ -25,9 +25,12 @@ public class JourneyService {
         }
         List<JourneyStep> seeded = new ArrayList<>();
         seeded.add(createStep(userId, 1, "Confirm registration", "Verify your voter registration status online."));
-        seeded.add(createStep(userId, 2, "Verify identity documents", "Keep ID proof and address proof ready for election day."));
-        seeded.add(createStep(userId, 3, "Locate polling booth", "Find and save the nearest polling station with directions."));
-        seeded.add(createStep(userId, 4, "Plan election day", "Set reminders for date, time, and travel to the booth."));
+        seeded.add(createStep(userId, 2, "Verify identity documents",
+                "Keep ID proof and address proof ready for election day."));
+        seeded.add(createStep(userId, 3, "Locate polling booth",
+                "Find and save the nearest polling station with directions."));
+        seeded.add(
+                createStep(userId, 4, "Plan election day", "Set reminders for date, time, and travel to the booth."));
         journeyStepRepository.saveAll(seeded);
         return journeyStepRepository.findByUserIdOrderByStepOrder(userId);
     }

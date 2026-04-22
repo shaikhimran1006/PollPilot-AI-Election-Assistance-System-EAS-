@@ -24,9 +24,12 @@ public class TimelineService {
         }
         Instant now = Instant.now();
         List<TimelineEvent> seeded = new ArrayList<>();
-        seeded.add(createEvent(userId, "Registration window closes", "Complete any pending registration updates.", "deadline", now.plus(7, ChronoUnit.DAYS)));
-        seeded.add(createEvent(userId, "Document verification reminder", "Carry approved ID and voter slip.", "reminder", now.plus(12, ChronoUnit.DAYS)));
-        seeded.add(createEvent(userId, "Election day", "Reach polling booth during your preferred time slot.", "election", now.plus(18, ChronoUnit.DAYS)));
+        seeded.add(createEvent(userId, "Registration window closes", "Complete any pending registration updates.",
+                "deadline", now.plus(7, ChronoUnit.DAYS)));
+        seeded.add(createEvent(userId, "Document verification reminder", "Carry approved ID and voter slip.",
+                "reminder", now.plus(12, ChronoUnit.DAYS)));
+        seeded.add(createEvent(userId, "Election day", "Reach polling booth during your preferred time slot.",
+                "election", now.plus(18, ChronoUnit.DAYS)));
         timelineEventRepository.saveAll(seeded);
         return timelineEventRepository.findByUserIdOrderByEventTime(userId);
     }
@@ -41,7 +44,8 @@ public class TimelineService {
         return timelineEventRepository.save(event);
     }
 
-    private TimelineEvent createEvent(String userId, String title, String description, String category, Instant eventTime) {
+    private TimelineEvent createEvent(String userId, String title, String description, String category,
+            Instant eventTime) {
         TimelineEvent event = new TimelineEvent();
         event.setUserId(userId);
         event.setTitle(title);
