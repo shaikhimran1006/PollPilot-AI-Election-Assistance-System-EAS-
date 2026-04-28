@@ -9,6 +9,7 @@ import DocumentsPage from "./pages/DocumentsPage";
 import LocatorPage from "./pages/LocatorPage";
 import ChatbotPage from "./pages/ChatbotPage";
 import AdminPage from "./pages/AdminPage";
+import PitchDeckPage from "./pages/PitchDeckPage";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<AuthGuard><Layout /></AuthGuard>}
         children={[
+          <Route path="pitch" element={<PitchDeckPage />} key="pitch" />,
           <Route index element={<DashboardPage />} key="dashboard" />,
           <Route path="journey" element={<JourneyPage />} key="journey" />,
           <Route path="timeline" element={<TimelinePage />} key="timeline" />,

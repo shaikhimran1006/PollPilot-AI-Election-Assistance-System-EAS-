@@ -2,6 +2,8 @@ import { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import api from "../services/api";
 import { auth } from "../services/firebase";
+import { isDemoMode } from "../services/api";
+import ThemeToggle from "../components/ThemeToggle";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -44,9 +46,9 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();
+      const idToken = isDemoMode
+        ? "demo-id-token"
+        : await signInWithPopup(auth, new GoogleAuthProvider()).then((result) => result.user.getIdToken());
       const response = await api.post("/auth/firebase", { idToken });
       handleSuccess(response.data.accessToken);
     } catch (err: any) {
@@ -57,9 +59,32 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container page" style={{ display: "grid", placeItems: "center" }}>
-      <div className="card" style={{ maxWidth: 420, width: "100%" }}>
-        <h2 style={{ fontFamily: "Fraunces, serif" }}>Welcome to PollPilot</h2>
+    <div className="container page login-shell">
+      <div style={{ width: "100%", display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <ThemeToggle />
+      </div>
+      <div className="login-preview card fade-in">
+        <div className="badge">HACKATHON SHOWCASE</div>
+        <h2 className="section-title" style={{ marginTop: 16 }}>Election help that feels live</h2>
+        <p style={{ color: "var(--muted)", maxWidth: 520 }}>
+          PollPilot combines guidance, reminders, document checks, polling locator support, and a civic assistant into one polished flow.
+        </p>
+        <div className="login-features">
+          <div className="feature-pill">Real-time simulation</div>
+          <div className="feature-pill">Multilingual support</div>
+          <div className="feature-pill">Polling locator</div>
+          <div className="feature-pill">AI guidance</div>
+        </div>
+        <div className="login-story card" style={{ marginTop: 24 }}>
+          <div className="badge">DEMO MODE</div>
+          <p style={{ marginBottom: 0, color: "var(--text)" }}>
+            In demo mode, the app fakes service responses so the full journey looks active even without real backend data.
+          </p>
+        </div>
+      </div>
+
+      <div className="card login-form-panel fade-in">
+        <h2 style={{ fontFamily: "Fraunces, serif", marginTop: 0 }}>Welcome to PollPilot</h2>
         <p style={{ color: "var(--muted)" }}>Secure sign-in with Firebase Authentication.</p>
         <label htmlFor="email">Email</label>
         <input
