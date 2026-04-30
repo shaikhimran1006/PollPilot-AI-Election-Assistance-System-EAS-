@@ -155,6 +155,37 @@ PollPilot-AI-Election-Assistance-System-EAS-
 - Backend: `mvn spring-boot:run` (containerize with Docker for prod)
 - Frontend: `npm run build` and host on Firebase Hosting or CDN
 
+## GCP Deployment
+
+This repo is now set up for a single Cloud Run service that serves both the React UI and the Spring Boot API from one container.
+
+1. Create a GCP project and enable billing.
+2. Enable these APIs: Cloud Run, Cloud Build, Artifact Registry or Container Registry, Secret Manager, and Cloud SQL Admin if you want PostgreSQL.
+3. Deploy with Cloud Build from the repo root:
+
+```bash
+gcloud builds submit --config cloudbuild.yaml .
+```
+
+Or run the one-shot PowerShell script from the repo root:
+
+```powershell
+deploy-cloudrun.ps1
+.\deploy-cloudrun.ps1 YOUR_GCP_PROJECT_ID
+```
+
+If you omit the project id, the script will prompt you for it.
+
+4. If you want persistent PostgreSQL instead of the default in-memory H2 database, create a Cloud SQL instance and redeploy with the database env vars set in Cloud Run.
+
+The container build already bakes the frontend into the Spring Boot app, so browser routes like `/chatbot` work directly on Cloud Run without a separate frontend deployment.
+
+## Production Notes
+
+- The frontend uses `VITE_API_BASE_URL=/api` during the container build, so browser requests stay same-origin.
+- API routes stay under `/api/**` and are protected by JWT, while the frontend shell and static assets remain public.
+- Add your Google service keys and database settings to Cloud Run environment variables or Secret Manager before using real data.
+
 ## Google Services Integration Steps
 
 1. Create Firebase project, enable Email/Google sign-in.

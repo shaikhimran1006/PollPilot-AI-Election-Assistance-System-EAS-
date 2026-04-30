@@ -4,6 +4,7 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.pollpilot.eas.model.PollingLocation;
 import com.pollpilot.eas.repository.PollingLocationRepository;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +26,7 @@ public class PollingLocationService {
     public List<PollingLocation> searchLocations(String userId, String address) throws Exception {
         var results = PlacesApi.textSearchQuery(geoApiContext, "polling station near " + address)
                 .await();
-        List<PollingLocation> locations = results.results
-                .stream()
+        List<PollingLocation> locations = Arrays.stream(results.results)
                 .map(result -> {
                     PollingLocation location = new PollingLocation();
                     location.setUserId(userId);

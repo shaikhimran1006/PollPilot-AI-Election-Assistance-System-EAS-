@@ -1,0 +1,16 @@
+package com.pollpilot.eas.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class SpaForwardController {
+
+    @GetMapping(value = {
+            "/{path:^(?!api$).*$}",
+            "/{path:^(?!api$).*$}/**/{subpath:[^\\.]*}"
+    })
+    public String forwardSpaRoutes() {
+        return "forward:/index.html";
+    }
+}
