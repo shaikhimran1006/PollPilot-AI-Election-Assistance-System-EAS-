@@ -11,52 +11,51 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const getErrorMessage = (caught: unknown, fallback: string) => {
+    if (caught && typeof caught === "object" && "response" in caught) {
+      const response = (caught as { response?: { data?: { message?: string } } }).response;
+      if (response?.data?.message) {
+        return response.data.message;
+      }
+    }
+    return fallback;
+  };
+
+  const runAuthAction = async (action: () => Promise<string>, fallback: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const accessToken = await action();
+      handleSuccess(accessToken);
+    } catch (caught: unknown) {
+      setError(getErrorMessage(caught, fallback));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSuccess = (accessToken: string) => {
     localStorage.setItem("accessToken", accessToken);
     window.location.href = "/";
   };
 
-  const login = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await api.post("/auth/login", { email, password });
-      handleSuccess(response.data.accessToken);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const login = () => runAuthAction(async () => {
+    const response = await api.post("/auth/login", { email, password });
+    return response.data.accessToken;
+  }, "Login failed");
 
-  const signup = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await api.post("/auth/signup", { email, password });
-      handleSuccess(response.data.accessToken);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Sign up failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const signup = () => runAuthAction(async () => {
+    const response = await api.post("/auth/signup", { email, password });
+    return response.data.accessToken;
+  }, "Sign up failed");
 
-  const firebaseLogin = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const idToken = isDemoMode
-        ? "demo-id-token"
-        : await signInWithPopup(auth, new GoogleAuthProvider()).then((result) => result.user.getIdToken());
-      const response = await api.post("/auth/firebase", { idToken });
-      handleSuccess(response.data.accessToken);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Firebase login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const firebaseLogin = () => runAuthAction(async () => {
+    const idToken = isDemoMode
+      ? "demo-id-token"
+      : await signInWithPopup(auth, new GoogleAuthProvider()).then((result) => result.user.getIdToken());
+    const response = await api.post("/auth/firebase", { idToken });
+    return response.data.accessToken;
+  }, "Firebase login failed");
 
   return (
     <div className="container page login-shell">
@@ -89,6 +88,8 @@ export default function LoginPage() {
         <label htmlFor="email">Email</label>
         <input
           id="email"
+          type="email"
+          autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           style={{ width: "100%", padding: 12, margin: "8px 0 16px", borderRadius: 10 }}
@@ -97,11 +98,12 @@ export default function LoginPage() {
         <input
           id="password"
           type="password"
+          autoComplete="current-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           style={{ width: "100%", padding: 12, margin: "8px 0 16px", borderRadius: 10 }}
         />
-        {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
+        {error && <p role="alert" style={{ color: "var(--danger)" }}>{error}</p>}
         <button className="primary-btn" onClick={login} disabled={loading} style={{ width: "100%", marginBottom: 12 }}>
           {loading ? "Please wait..." : "Sign In"}
         </button>
