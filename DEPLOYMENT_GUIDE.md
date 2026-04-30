@@ -7,6 +7,7 @@ This guide covers deploying the PollPilot frontend to Google Cloud Platform with
 ## 📋 Overview
 
 **Deployment Architecture:**
+
 - **Hosting**: Google Cloud Storage (Static files) + Cloud CDN (Content Delivery)
 - **CI/CD**: GitHub Actions (Automated build & deploy)
 - **Domain**: Cloud Load Balancer with custom domain
@@ -147,10 +148,10 @@ gcloud compute forwarding-rules describe pollpilot-frontend-http-lb --global
 2. Click **Settings** → **Secrets and variables** → **Actions**
 3. Click **New repository secret** and add:
 
-| Secret Name | Value |
-|-------------|-------|
-| `GCP_PROJECT_ID` | `pollpilot-frontend` |
-| `GCP_SA_KEY` | Contents of `~/gcp-key.json` |
+| Secret Name       | Value                                                    |
+| ----------------- | -------------------------------------------------------- |
+| `GCP_PROJECT_ID`  | `pollpilot-frontend`                                     |
+| `GCP_SA_KEY`      | Contents of `~/gcp-key.json`                             |
 | `GCS_BUCKET_NAME` | Your bucket name (e.g., `pollpilot-frontend-1234567890`) |
 
 ### 3.2 Verify Secrets
@@ -169,6 +170,7 @@ gh secret list -R <your-github-repo>
 The workflow file is already created at `.github/workflows/deploy-frontend.yml`
 
 **What it does:**
+
 1. ✅ Installs dependencies
 2. ✅ Runs tests
 3. ✅ Builds frontend (Vite)
@@ -332,13 +334,13 @@ gsutil versioning get gs://$BUCKET_NAME/
 
 ## 🚨 Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| **404 errors on routes** | Add `error_doc` configuration to bucket |
-| **Cache not updating** | Run CDN invalidation: `gcloud compute backend-buckets invalidate-cdn-cache` |
-| **Build fails in GitHub** | Check logs in Actions tab, verify Node version |
-| **Permission denied** | Verify service account has `Storage Admin` role |
-| **Slow deployment** | Use `gsutil -m` for parallel uploads |
+| Issue                     | Solution                                                                    |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **404 errors on routes**  | Add `error_doc` configuration to bucket                                     |
+| **Cache not updating**    | Run CDN invalidation: `gcloud compute backend-buckets invalidate-cdn-cache` |
+| **Build fails in GitHub** | Check logs in Actions tab, verify Node version                              |
+| **Permission denied**     | Verify service account has `Storage Admin` role                             |
+| **Slow deployment**       | Use `gsutil -m` for parallel uploads                                        |
 
 ---
 

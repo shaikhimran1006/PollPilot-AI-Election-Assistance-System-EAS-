@@ -3,6 +3,7 @@
 ## Pre-Deployment Setup
 
 ### Account & Project Setup
+
 - [ ] Create GCP account with billing enabled
 - [ ] Create GCP project: `pollpilot-frontend`
 - [ ] Enable required APIs (Storage, Compute, CloudBuild)
@@ -10,6 +11,7 @@
 - [ ] Download service account JSON key
 
 ### GCP Infrastructure
+
 - [ ] Create Cloud Storage bucket
 - [ ] Enable versioning on bucket
 - [ ] Configure bucket for website hosting
@@ -19,6 +21,7 @@
 - [ ] Get external IP address
 
 ### GitHub Configuration
+
 - [ ] Create GitHub repository (if not already created)
 - [ ] Add `GCP_PROJECT_ID` secret
 - [ ] Add `GCP_SA_KEY` secret
@@ -28,6 +31,7 @@
 - [ ] Add `SLACK_WEBHOOK_URL` secret (optional, for notifications)
 
 ### Frontend Configuration
+
 - [ ] Create `.env.production` file
 - [ ] Set API endpoints
 - [ ] Set Firebase configuration
@@ -39,12 +43,14 @@
 ## Deployment Steps
 
 ### Automated (Recommended)
+
 - [ ] Push code to `main` branch
 - [ ] GitHub Actions workflow triggers automatically
 - [ ] Monitor deployment in Actions tab
 - [ ] Verify site is live at CDN URL
 
 ### Manual Deployment
+
 - [ ] Run `./deploy.sh` (Linux/Mac) or `.\deploy.ps1` (Windows)
 - [ ] Verify files in Cloud Storage bucket
 - [ ] Check CDN cache invalidation
@@ -55,6 +61,7 @@
 ## Post-Deployment Verification
 
 ### Functionality Tests
+
 - [ ] Homepage loads correctly
 - [ ] Navigation works
 - [ ] API calls succeed
@@ -64,6 +71,7 @@
 - [ ] Mobile responsive layout
 
 ### Performance & Security
+
 - [ ] Page load time acceptable (< 3s)
 - [ ] No console errors in browser DevTools
 - [ ] HTTPS working (if SSL enabled)
@@ -72,6 +80,7 @@
 - [ ] No sensitive data in HTML source
 
 ### CDN & Deployment
+
 - [ ] Assets cached properly
 - [ ] HTML has no-cache headers
 - [ ] Cache invalidation working
@@ -83,16 +92,19 @@
 ## Monitoring & Maintenance
 
 ### Daily
+
 - [ ] Monitor CDN performance metrics
 - [ ] Check for 4xx/5xx errors
 - [ ] Review user reports
 
 ### Weekly
+
 - [ ] Check backup versioning
 - [ ] Review deployment logs
 - [ ] Test rollback procedure
 
 ### Monthly
+
 - [ ] Clean up old versions
 - [ ] Review storage costs
 - [ ] Update dependencies
@@ -115,12 +127,14 @@ If deployment fails:
 ## Troubleshooting Checklist
 
 ### Build Fails
+
 - [ ] Check Node.js version (should be 18+)
 - [ ] Clear node_modules: `rm -rf node_modules && npm ci`
 - [ ] Check for TypeScript errors: `npm run build`
 - [ ] Verify environment variables are set
 
 ### Deployment Fails
+
 - [ ] Verify GCP credentials: `gcloud auth list`
 - [ ] Check service account permissions
 - [ ] Verify bucket exists: `gsutil ls -b gs://bucket-name`
@@ -128,6 +142,7 @@ If deployment fails:
 - [ ] Review deployment logs
 
 ### Site Not Accessible
+
 - [ ] Verify external IP: `gcloud compute forwarding-rules describe NAME --global`
 - [ ] Check DNS resolution (if custom domain)
 - [ ] Verify firewall rules
@@ -170,9 +185,9 @@ If deployment fails:
 
 ## Completion
 
-**Deployed by:** _______________  
-**Date:** _______________  
-**Version:** _______________  
-**Notes:** ________________________________________________________________
+**Deployed by:** ******\_\_\_******  
+**Date:** ******\_\_\_******  
+**Version:** ******\_\_\_******  
+**Notes:** ******************************\_\_\_\_******************************
 
 ✅ All checks complete! Frontend is live on GCP.

@@ -82,14 +82,14 @@ Write-Warning-Custom "[5/6] Deploying to Cloud Storage (gs://$BucketName)..."
 
 Write-Info "Uploading assets with cache headers..."
 gsutil -m -h "Cache-Control:public,max-age=31536000" `
-       cp -r "frontend/dist/assets/*" "gs://$BucketName/assets/" 2>$null
+    cp -r "frontend/dist/assets/*" "gs://$BucketName/assets/" 2>$null
 
 Write-Info "Uploading HTML with no-cache headers..."
 $htmlFiles = Get-ChildItem -Path "frontend/dist/*.html" -File
 foreach ($file in $htmlFiles) {
     gsutil -h "Cache-Control:no-cache,max-age=0" `
-           -h "Content-Type:text/html" `
-           cp $file.FullName "gs://$BucketName/"
+        -h "Content-Type:text/html" `
+        cp $file.FullName "gs://$BucketName/"
 }
 
 Write-Info "Uploading other files..."
@@ -105,7 +105,8 @@ gcloud compute backend-buckets invalidate-cdn-cache `
 
 if ($LASTEXITCODE -eq 0) {
     Write-Success "✅ CDN cache invalidated"
-} else {
+}
+else {
     Write-Warning-Custom "⚠️  CDN cache invalidation skipped (backend may not exist yet)"
 }
 
@@ -117,7 +118,8 @@ Write-Host "=========================================="
 $result = gsutil stat "gs://$BucketName/index.html" 2>&1
 if ($result -like "*File*") {
     Write-Success "✅ index.html deployed"
-} else {
+}
+else {
     Write-Error-Custom "❌ Deployment verification failed"
     exit 1
 }

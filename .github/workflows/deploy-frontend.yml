@@ -4,12 +4,12 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'frontend/**'
-      - '.github/workflows/deploy-frontend.yml'
+      - "frontend/**"
+      - ".github/workflows/deploy-frontend.yml"
   workflow_dispatch: # Allow manual trigger
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: "18"
   REGISTRY: gcr.io
 
 jobs:
@@ -27,8 +27,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: 'frontend/package-lock.json'
+          cache: "npm"
+          cache-dependency-path: "frontend/package-lock.json"
 
       - name: Install dependencies
         working-directory: ./frontend
@@ -58,21 +58,21 @@ jobs:
         working-directory: ./frontend
         run: |
           BUCKET_NAME="${{ secrets.GCS_BUCKET_NAME }}"
-          
+
           # Upload all files with cache busting headers
           gsutil -m cp -r dist/* gs://$BUCKET_NAME/
-          
+
           # Set HTML files with no-cache headers
           for file in dist/*.html; do
             gsutil -h "Cache-Control:no-cache,max-age=0" \
                    -h "Content-Type:text/html" \
                    cp "$file" gs://$BUCKET_NAME/
           done
-          
+
           # Set CSS/JS with long cache TTL
           gsutil -m -h "Cache-Control:public,max-age=31536000" \
                  cp dist/assets/** gs://$BUCKET_NAME/assets/
-          
+
           echo "✅ Files uploaded to gs://$BUCKET_NAME"
 
       - name: Invalidate Cloud CDN Cache
@@ -85,7 +85,7 @@ jobs:
       - name: Verify Deployment
         run: |
           BUCKET_NAME="${{ secrets.GCS_BUCKET_NAME }}"
-          
+
           # Check if index.html exists
           if gsutil -q stat gs://$BUCKET_NAME/index.html; then
             echo "✅ index.html deployed successfully"

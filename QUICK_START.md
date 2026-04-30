@@ -46,6 +46,7 @@ gcloud compute forwarding-rules describe pollpilot-frontend-http-lb --global
 ### 3️⃣ Deploy Frontend
 
 #### Option A: Manual Deployment
+
 ```bash
 cd frontend
 npm install
@@ -63,6 +64,7 @@ gcloud compute backend-buckets invalidate-cdn-cache \
 ```
 
 #### Option B: Automated via GitHub Actions
+
 1. Add GitHub Secrets:
    - `GCP_PROJECT_ID`: `pollpilot-frontend`
    - `GCP_SA_KEY`: (from service account JSON)
@@ -73,6 +75,7 @@ gcloud compute backend-buckets invalidate-cdn-cache \
 3. Check progress in: **Actions** tab
 
 #### Option C: Script (Windows/Linux)
+
 ```bash
 # Linux/Mac
 export GCS_BUCKET_NAME="your-bucket"
@@ -133,12 +136,12 @@ VITE_FIREBASE_PROJECT_ID=your-project
 
 ## ❌ Troubleshooting
 
-| Problem | Solution |
-|---------|----------|
-| **Bucket already exists** | Use `gsutil ls` to find existing buckets |
-| **404 on routes** | Configure error document: `gsutil web set -e index.html` |
-| **Cache not updating** | Run: `gcloud compute backend-buckets invalidate-cdn-cache pollpilot-frontend-backend --path="/*"` |
-| **Permission denied** | Run: `gcloud auth login` and `gcloud auth application-default login` |
+| Problem                   | Solution                                                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Bucket already exists** | Use `gsutil ls` to find existing buckets                                                          |
+| **404 on routes**         | Configure error document: `gsutil web set -e index.html`                                          |
+| **Cache not updating**    | Run: `gcloud compute backend-buckets invalidate-cdn-cache pollpilot-frontend-backend --path="/*"` |
+| **Permission denied**     | Run: `gcloud auth login` and `gcloud auth application-default login`                              |
 
 ---
 

@@ -6,38 +6,41 @@ I've created complete deployment infrastructure for your PollPilot frontend. Her
 
 ### 📚 Documentation Files
 
-| File | Purpose |
-|------|---------|
-| **DEPLOYMENT_GUIDE.md** | Complete step-by-step guide (7 sections) |
-| **QUICK_START.md** | 5-minute quickstart guide |
+| File                        | Purpose                                    |
+| --------------------------- | ------------------------------------------ |
+| **DEPLOYMENT_GUIDE.md**     | Complete step-by-step guide (7 sections)   |
+| **QUICK_START.md**          | 5-minute quickstart guide                  |
 | **DEPLOYMENT_CHECKLIST.md** | Pre/post deployment verification checklist |
-| **THIS FILE** | Overview and architecture |
+| **THIS FILE**               | Overview and architecture                  |
 
 ### ⚙️ Configuration Files
 
-| File | Purpose |
-|------|---------|
-| **.github/workflows/deploy-frontend.yml** | Automated GitHub Actions CI/CD pipeline |
-| **deploy.sh** | Linux/Mac deployment script |
-| **deploy.ps1** | Windows PowerShell deployment script |
-| **frontend/Dockerfile** | Container image for alternative deployment |
-| **frontend/nginx.conf** | Nginx config for serving SPA with caching |
-| **frontend/.env.example** | Environment variables template |
+| File                                      | Purpose                                    |
+| ----------------------------------------- | ------------------------------------------ |
+| **.github/workflows/deploy-frontend.yml** | Automated GitHub Actions CI/CD pipeline    |
+| **deploy.sh**                             | Linux/Mac deployment script                |
+| **deploy.ps1**                            | Windows PowerShell deployment script       |
+| **frontend/Dockerfile**                   | Container image for alternative deployment |
+| **frontend/nginx.conf**                   | Nginx config for serving SPA with caching  |
+| **frontend/.env.example**                 | Environment variables template             |
 
 ---
 
 ## 🎯 Three Deployment Options
 
 ### **Option 1: GitHub Actions (Recommended) ✨**
+
 Fully automated CI/CD pipeline
 
 **Pros:**
+
 - ✅ Automatic deployment on push
 - ✅ Integrated with GitHub
 - ✅ No manual intervention needed
 - ✅ Built-in error notifications
 
 **Cons:**
+
 - Requires GitHub account
 - Requires GCP service account setup
 
@@ -46,16 +49,19 @@ Fully automated CI/CD pipeline
 
 ---
 
-### **Option 2: Manual Scripts** 
+### **Option 2: Manual Scripts**
+
 Run local deployment scripts
 
 **Pros:**
+
 - ✅ Simple one-command deployment
 - ✅ Works from Windows, Mac, Linux
 - ✅ Full control over deployment
 - ✅ Good for testing
 
 **Cons:**
+
 - Manual trigger required
 - Need local gcloud CLI setup
 
@@ -64,16 +70,19 @@ Run local deployment scripts
 
 ---
 
-### **Option 3: Docker + Cloud Run** 
+### **Option 3: Docker + Cloud Run**
+
 Containerized deployment
 
 **Pros:**
+
 - ✅ Serverless auto-scaling
 - ✅ Better for SSR if needed
 - ✅ Easy rollback
 - ✅ Multi-region support
 
 **Cons:**
+
 - Slightly more complex setup
 - Different pricing model
 
@@ -227,6 +236,7 @@ gcloud compute forwarding-rules create pollpilot-frontend-http-lb \
 
 1. Go to GitHub repo → Settings → Secrets → Actions
 2. Add 3 secrets:
+
    ```
    GCP_PROJECT_ID = pollpilot-frontend
    GCP_SA_KEY = [paste contents of ~/gcp-key.json]
@@ -252,12 +262,12 @@ git push origin main
 
 ### Cache Configuration
 
-| File Type | Cache Duration | Strategy |
-|-----------|----------------|----------|
-| HTML | No cache | `Cache-Control: no-cache, max-age=0` |
-| CSS/JS | 1 year | `Cache-Control: public, max-age=31536000` |
-| Images | 1 year | `Cache-Control: public, max-age=31536000` |
-| API calls | No cache | Handled by backend |
+| File Type | Cache Duration | Strategy                                  |
+| --------- | -------------- | ----------------------------------------- |
+| HTML      | No cache       | `Cache-Control: no-cache, max-age=0`      |
+| CSS/JS    | 1 year         | `Cache-Control: public, max-age=31536000` |
+| Images    | 1 year         | `Cache-Control: public, max-age=31536000` |
+| API calls | No cache       | Handled by backend                        |
 
 ### CDN Invalidation
 
@@ -301,20 +311,24 @@ Domain: https://yourdomain.com (after DNS setup)
 ### Common Issues
 
 **Q: Build fails in GitHub Actions**
+
 - Check Node version (should be 18+)
 - Verify environment variables
 - Check build locally: `cd frontend && npm run build`
 
 **Q: 404 errors on frontend routes**
+
 - SPA routing issue: update nginx config
 - Browser cache: `Ctrl+Shift+Del` and clear cache
 
 **Q: Files not updating**
+
 - CDN cache not invalidated
 - Try: `gcloud compute backend-buckets invalidate-cdn-cache`
 - Or wait 60s for cache expiration
 
 **Q: Permission denied deploying**
+
 - Check service account permissions
 - Run: `gcloud auth application-default login`
 
@@ -322,12 +336,12 @@ Domain: https://yourdomain.com (after DNS setup)
 
 ## 💰 Cost Estimation
 
-| Service | Free Tier | Cost |
-|---------|-----------|------|
-| Cloud Storage | 5 GB/month | $0.02/GB after |
-| Cloud CDN | First 1 TB/month | $0.12/GB after |
-| Compute (Load Balancer) | - | $0.025/hr |
-| **Total Monthly** | ~$0 | ~$20 (small app) |
+| Service                 | Free Tier        | Cost             |
+| ----------------------- | ---------------- | ---------------- |
+| Cloud Storage           | 5 GB/month       | $0.02/GB after   |
+| Cloud CDN               | First 1 TB/month | $0.12/GB after   |
+| Compute (Load Balancer) | -                | $0.025/hr        |
+| **Total Monthly**       | ~$0              | ~$20 (small app) |
 
 ---
 
