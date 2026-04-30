@@ -36,8 +36,8 @@ class AuthControllerTest {
                 .thenReturn(new AuthResponse("token", "user-1", "user@example.com"));
 
         mockMvc.perform(post("/api/auth/signup")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"user@example.com\",\"password\":\"password123\"}"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"user@example.com\",\"password\":\"password123\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value("token"))
                 .andExpect(jsonPath("$.userId").value("user-1"))
@@ -47,8 +47,8 @@ class AuthControllerTest {
     @Test
     void signupRejectsInvalidPassword() throws Exception {
         mockMvc.perform(post("/api/auth/signup")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"user@example.com\",\"password\":\"short\"}"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"user@example.com\",\"password\":\"short\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Validation failed"));
     }
@@ -59,21 +59,21 @@ class AuthControllerTest {
                 .thenThrow(new IllegalArgumentException("Invalid credentials"));
 
         mockMvc.perform(post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"user@example.com\",\"password\":\"badpass\"}"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"user@example.com\",\"password\":\"badpass\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Invalid credentials"));
     }
 
-        @Test
-        void loginReturnsServerErrorOnUnhandledException() throws Exception {
-                when(authService.login(any(LoginRequest.class)))
-                                .thenThrow(new RuntimeException("boom"));
+    @Test
+    void loginReturnsServerErrorOnUnhandledException() throws Exception {
+        when(authService.login(any(LoginRequest.class)))
+                .thenThrow(new RuntimeException("boom"));
 
-                mockMvc.perform(post("/api/auth/login")
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .content("{\"email\":\"user@example.com\",\"password\":\"password123\"}"))
-                                .andExpect(status().isInternalServerError())
-                                .andExpect(jsonPath("$.message").value("Server error"));
-        }
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"user@example.com\",\"password\":\"password123\"}"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message").value("Server error"));
+    }
 }

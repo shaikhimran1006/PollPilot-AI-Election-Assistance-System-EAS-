@@ -35,9 +35,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 List<String> roles = List.of();
                 if (rolesClaim instanceof List<?> list) {
                     roles = list.stream()
-                        .filter(String.class::isInstance)
-                        .map(String.class::cast)
-                        .toList();
+                            .filter(String.class::isInstance)
+                            .map(String.class::cast)
+                            .toList();
                 }
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         claims.getSubject(),
